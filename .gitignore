@@ -2,3 +2,4 @@ myprog
 *.o
 build/
 deps
+*.bin

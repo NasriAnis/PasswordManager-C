@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (argc < 2) {
-    printf("No argument specififed running the CLI envirenment.\n");
+    printf("\n\nNo argument specififed running the CLI envirenment.\n");
     printf("Enter your password : ");
     fgets(password_buffer, sizeof(password_buffer), stdin);
     authentificate(password_buffer);
