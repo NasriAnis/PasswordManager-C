@@ -3,3 +3,4 @@ myprog
 build/
 deps
 *.bin
+*.json
