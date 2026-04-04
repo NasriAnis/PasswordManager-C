@@ -6,3 +6,6 @@ deps
 *.json
 .cache/
 *.nvim
+.gitignore
+improvments.md
+QWEN.md
