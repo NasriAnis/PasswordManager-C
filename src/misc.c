@@ -8,6 +8,13 @@ void f_gets(char* input){ // add a nulll terminator at the new line of s string
   input[strcspn(input, "\n")] = '\0';
 }
 
+// need to pass the size as a parameter in f_gets and str_cpy:
+//
+//      1 void f_gets(char* input, size_t size) {
+//      2   fgets(input, size, stdin);
+//      3   input[strcspn(input, "\n")] = '\0';
+//      4 }
+
 void str_cpy(char* input, char* buffer){
   strncpy(input, buffer, sizeof(input) - 1);
   input[sizeof(input) - 1] = '\0';
@@ -24,7 +31,7 @@ int tokenize(char* input, char** tokens){
   return count;
 }
 
-void trim(char *str) { // remove traling and leading spaces
+void trim(char *str) {
     // trim leading spaces
     int start = 0;
     while (isspace((unsigned char)str[start]))
@@ -38,4 +45,10 @@ void trim(char *str) { // remove traling and leading spaces
     int end = strlen(str) - 1;
     while (end >= 0 && isspace((unsigned char)str[end]))
         str[end--] = '\0';
+}
+void print_hex(const unsigned char* data, size_t len){
+  for(size_t i = 0; i < len; i++){
+    printf("%02x", data[i]);
+  }
+  printf("\n");
 }

@@ -45,13 +45,14 @@ int new_line(char *file_name, int num){
   return 0;
 }
 
-char** F_search(char* file_name,char* input, char* output, int search_type, int fetch_line){
+char** F_search(char* file_name,char* input, int search_type, int fetch_line){
   FILE *fptr;
   fptr = F_open(file_name, "r");
 
   /* search types :
    * 1- user credentials
-   * 2- user saved accounts
+   * 2- user saved sites
+   * 3- user saved logins
     */
 
   if (search_type == 1){
@@ -63,6 +64,40 @@ char** F_search(char* file_name,char* input, char* output, int search_type, int 
     results[1] = strdup(word2);
 
     return results;
+  }
+  if (search_type == 2){
+    char word1[256]; char word2[256]; char word3[256]; char line[1024];
+    while (fgets(line, sizeof(line), fptr) != NULL) {
+      if (sscanf(line, "%255s %255s %255s", word1, word2, word3) == 3) {
+
+        if (strcmp(word1, input) == 0) {
+          char** results = malloc(3 * sizeof(char*));
+          if (!results) return NULL;
+
+          results[0] = strdup(word1);
+          results[1] = strdup(word2);
+          results[2] = strdup(word3);
+          return results;
+        }
+      }
+    }
+  }
+  if (search_type == 3){
+    char word1[256]; char word2[256]; char word3[256]; char line[1024];
+    while (fgets(line, sizeof(line), fptr) != NULL) {
+      if (sscanf(line, "%255s %255s %255s", word1, word2, word3) == 3) {
+
+        if (strcmp(word2, input) == 0) {
+          char** results = malloc(3 * sizeof(char*));
+          if (!results) return NULL;
+
+          results[0] = strdup(word1);
+          results[1] = strdup(word2);
+          results[2] = strdup(word3);
+          return results;
+        }
+      }
+    }
   }
   return NULL;
 }

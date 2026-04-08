@@ -7,18 +7,24 @@
 #include "misc.h"
 #include "crypto.h"
 
-char *tokens[64];
-char password_buffer[60];
-char username_buffer[60];
-char user_input[20];
+typedef struct {
+  char username[70];
+  char passwd[70];
+} user_t;
 user_t user;
+
+char password_buffer[1060];
+char username_buffer[1060];
+char user_input[1020];
 
 void user_creation();
 void authentication();
 void add(char* tokens[]);
-// void show();
+void show(char* tokens[]);
 
 int main(int argc, char *argv[]) {
+
+  char *tokens[64];
 
   // if no argument are specififed
   if (argc < 2) {
@@ -46,7 +52,9 @@ int main(int argc, char *argv[]) {
         } else { add(tokens); }
       }
       else if (strcmp(tokens[0], "show") == 0){
-        // show();
+        if (count != 2){
+          printf("Command layout : add site=[site] or add user=[username]");
+        } else { show(tokens); }
       }
     }
   }
@@ -100,14 +108,17 @@ void add(char* tokens[]){
   fgets(user_input, sizeof(user_input), stdin);
 
   if (strcmp(user_input, "n")!=0){
-    unsigned char* encrypted_pass =
-                  crypto_encrypt((unsigned char *)user.passwd,
-                                 (unsigned char *)pass,
-                                           sizeof(pass));
+    size_t blob_len = 0;
+    unsigned char* encrypted_pass = crypto_encrypt((unsigned char *)user.passwd,
+                                                   (unsigned char *)pass,
+                                                   strlen(pass),
+                                                   &blob_len);
 
     char* b64_site = encode_base64(site);
     char* b64_login = encode_base64(login);
-    char* b64_pass = encode_base64((const char*)encrypted_pass);
+    char* b64_pass = encode_base64_bin((char*)encrypted_pass, blob_len);
+
+    printf("%s\n", b64_pass);
 
     F_write("user.bin", b64_site, 0);
     F_write("user.bin", " ", 0);
@@ -116,18 +127,46 @@ void add(char* tokens[]){
     F_write("user.bin", b64_pass, 1);
 
     free(encrypted_pass);
+    free(b64_login);
     free(b64_site);
     free(b64_pass);
-    free(b64_login);
-
   }
 }
 
-// void show(){
-//   char *site = tokens[1];
-//   char *login = tokens[2];
-//
-//   char line[100];
-//   F_search("user.bin", site, line, 1);
-//   printf("%s", line);
-// }
+void show(char* tokens[]){
+  char** results = NULL;
+  char *key = strtok(tokens[1], "=");
+  char *value = strtok(NULL, "=");
+
+  size_t decoded_len = 0;
+  // char *key1 = tokens[1];
+
+  char* b_key1 = encode_base64(value);
+
+  if (strcmp(key, "site")==0){
+    results = F_search("user.bin", b_key1, 2, 1);
+  } else if (strcmp(key, "account")==0){
+    results = F_search("user.bin", b_key1, 2, 1);
+  }
+
+  if (results == NULL) {
+    printf("Error: Not found\n");
+    return;
+  }
+
+  char* fetched_site = results[0];
+  char* fetched_username = results[1];
+  char* fetched_password = results[2];
+
+  char* decoded_site = decode_base64(fetched_site);
+  char* decoded_username = decode_base64(fetched_username);
+  unsigned char* decoded_password = decode_base64_bin(fetched_password, &decoded_len);
+
+  unsigned char* clear_passwd = crypto_decrypt((const unsigned char *)user.passwd, (unsigned char *)decoded_password);
+
+  printf("%s %s %s\n", decoded_site, decoded_username, clear_passwd);
+  free(decoded_username);
+  free(decoded_password);
+  free(b_key1);
+  free(results);
+}

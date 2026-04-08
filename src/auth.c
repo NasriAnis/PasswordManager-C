@@ -14,7 +14,7 @@ int authenticate(char *password_buffer, char* username_buffer) {
   char** b64_raw_value;
   int flag = 0;
 
-  b64_raw_value = F_search("user.bin", NULL, NULL, 1, 0);
+  b64_raw_value = F_search("user.bin", NULL, 1, 0);
   saved_username = b64_raw_value[0];
   encoded_saved_pass = b64_raw_value[1];
 
@@ -25,10 +25,11 @@ int authenticate(char *password_buffer, char* username_buffer) {
     printf("wrong user.\n");
     flag = 1;
   }
-  if (verify_password(password_buffer, decoded_saved_pass) == 0){
+  if (verify_password(password_buffer, decoded_saved_pass) != 0){
       printf("wrong password\n");
     flag = 1;
   }
+
   free(b64_raw_value);
   free(encoded_saved_pass);
   free(de_saved_username);

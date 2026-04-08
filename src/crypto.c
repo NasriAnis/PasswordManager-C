@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 #include "crypto.h"
+#include "misc.h"
 
 #define CIPHERTEXT_LEN (crypto_secretbox_MACBYTES + MESSAGE_LEN)
 #define MESSAGE_LEN 4
@@ -28,11 +29,11 @@ int verify_password(const char *password, const char *encoded) {
   return rc == ARGON2_OK ? 0 : -1; // 0 = match
 }
 
-unsigned char *crypto_encrypt(const unsigned char *key, const unsigned char *message, size_t message_len) {
+unsigned char *crypto_encrypt(const unsigned char *key, const unsigned char *message, size_t message_len, size_t *blob_len) {
   size_t ctext_len = crypto_secretbox_MACBYTES + message_len;
-  size_t blob_len  = crypto_secretbox_NONCEBYTES + ctext_len + sizeof(ui32);
+  *blob_len  = crypto_secretbox_NONCEBYTES + ctext_len + sizeof(ui32);
 
-  unsigned char *blob = malloc(blob_len);
+  unsigned char *blob = malloc(*blob_len);
   if (!blob){ return NULL; }
 
   // save message lenght
@@ -47,6 +48,10 @@ unsigned char *crypto_encrypt(const unsigned char *key, const unsigned char *mes
 
   randombytes_buf(nonce, crypto_secretbox_NONCEBYTES);
   crypto_secretbox_easy(ctext, message, message_len, nonce, key);
+
+  // debugging purpose
+  printf("encrypted : ");
+  print_hex(blob, *blob_len);
 
   return blob;
 }
@@ -65,11 +70,9 @@ unsigned char* crypto_decrypt(const unsigned char *key, unsigned char* blob){
   unsigned char* plain_text = malloc(message_len + 1);
   if (!plain_text){ return NULL; }
 
-  printf("ciph = %s \n nonce = %s \n", ctext, nonce);
-
   if (crypto_secretbox_open_easy(plain_text, ctext, ctext_len, nonce, key) != 0){
     free(plain_text);
-    fprintf(stderr, "Decryption failed");
+    fprintf(stderr, "Decryption failed\n");
     return NULL;
   }
  
@@ -77,11 +80,25 @@ unsigned char* crypto_decrypt(const unsigned char *key, unsigned char* blob){
   return plain_text;
 }
 
-char* encode_base64(const char* bin){
+char* encode_base64(char* bin){
+  // remove new linw charactere before encoding
+  size_t len = strlen(bin);
+  if (len > 0 && bin[len - 1] == '\n') {
+    bin[len - 1] = '\0';
+  }
+
   size_t l_len = sodium_base64_ENCODED_LEN(strlen(bin), sodium_base64_VARIANT_ORIGINAL);
   char *b64 = malloc(l_len);
   sodium_bin2base64(b64, l_len, (unsigned char *)bin, strlen(bin), sodium_base64_VARIANT_ORIGINAL);
 
+  return b64;
+}
+
+char* encode_base64_bin(const char* bin, size_t bin_len){
+  // size_t b_len = crypto_secretbox_NONCEBYTES + crypto_secretbox_MACBYTES + bin_len + sizeof(ui32);
+  size_t l_len = sodium_base64_ENCODED_LEN(bin_len, sodium_base64_VARIANT_ORIGINAL);
+  char *b64 = malloc(l_len);
+  sodium_bin2base64(b64, l_len, (unsigned char *)bin, bin_len, sodium_base64_VARIANT_ORIGINAL);
   return b64;
 }
 
@@ -102,4 +119,13 @@ char* decode_base64(const char* b64){
   bin[bin_len] = '\0';
 
   return (char *)bin;
+}
+
+unsigned char* decode_base64_bin(const char* b64, size_t *out_len) {
+    size_t bin_maxlen = strlen(b64);  // decoded is always shorter
+    unsigned char *bin = malloc(bin_maxlen);
+    sodium_base642bin(bin, bin_maxlen, b64, strlen(b64),
+                      NULL, out_len, NULL,
+                      sodium_base64_VARIANT_ORIGINAL);
+    return bin;
 }
