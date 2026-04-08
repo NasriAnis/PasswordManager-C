@@ -49,10 +49,6 @@ unsigned char *crypto_encrypt(const unsigned char *key, const unsigned char *mes
   randombytes_buf(nonce, crypto_secretbox_NONCEBYTES);
   crypto_secretbox_easy(ctext, message, message_len, nonce, key);
 
-  // debugging purpose
-  printf("encrypted : ");
-  print_hex(blob, *blob_len);
-
   return blob;
 }
 
