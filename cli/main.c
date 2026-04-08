@@ -134,6 +134,7 @@ void add(char *tokens[]) {
 }
 
 void show(char *tokens[]) {
+  // check if the tokens contains a =
   int flag = 0;
   int len = strlen(tokens[1]);
   for (int i = 0; len >= i; i++) {
@@ -142,44 +143,51 @@ void show(char *tokens[]) {
     }
   }
 
-  if (flag == 1){
-    char **results = NULL;
-    char *key = strtok(tokens[1], "=");
-    char *value = strtok(NULL, "=");
+  if (flag != 1){
+    printf("Syntax error expected : \
+           show site=[site] or show user=[username]");
+    return;
+  }
 
-    size_t decoded_len = 0;
-    // char *key1 = tokens[1];
+  char **results = NULL;
+  char *key = strtok(tokens[1], "=");
+  char *value = strtok(NULL, "=");
 
-    char *b_key1 = encode_base64(value);
+  size_t decoded_len = 0;
 
-    if (strcmp(key, "site") == 0) {
-      results = F_search("user.bin", b_key1, 2, 1);
-    } else if (strcmp(key, "account") == 0) {
-      results = F_search("user.bin", b_key1, 2, 1);
-    }
+  char *b_key1 = encode_base64(value);
 
-    if (results == NULL) {
-      printf("Error: Not found\n");
-      return;
-    }
+  if (strcmp(key, "site") == 0) {
+    results = F_search("user.bin", b_key1, 2, 1);
+  }
+  else if (strcmp(key, "account") == 0) {
+    results = F_search("user.bin", b_key1, 2, 1);
+  }
+  else {
+    printf("Syntax error expected : \
+           show site=[site] or show user=[username]");
+  }
 
-    char *fetched_site = results[0];
-    char *fetched_username = results[1];
-    char *fetched_password = results[2];
+  if (results == NULL) {
+    printf("Error: Not found\n");
+    return;
+  }
 
-    char *decoded_site = decode_base64(fetched_site);
-    char *decoded_username = decode_base64(fetched_username);
-    unsigned char *decoded_password =
-        decode_base64_bin(fetched_password, &decoded_len);
+  char *fetched_site = results[0];
+  char *fetched_username = results[1];
+  char *fetched_password = results[2];
 
-    unsigned char *clear_passwd = crypto_decrypt(
-        (const unsigned char *)user.passwd, (unsigned char *)decoded_password);
+  char *decoded_site = decode_base64(fetched_site);
+  char *decoded_username = decode_base64(fetched_username);
+  unsigned char *decoded_password =
+      decode_base64_bin(fetched_password, &decoded_len);
 
-    printf("%s %s %s\n", decoded_site, decoded_username, clear_passwd);
-    free(decoded_username);
-    free(decoded_password);
-    free(b_key1);
-    free(results);
+  unsigned char *clear_passwd = crypto_decrypt(
+      (const unsigned char *)user.passwd, (unsigned char *)decoded_password);
 
-  } else { printf("Invalid syntax : show site=[site] or site user=[username]\n");}
+  printf("%s %s %s\n", decoded_site, decoded_username, clear_passwd);
+  free(decoded_username);
+  free(decoded_password);
+  free(b_key1);
+  free(results);
 }
