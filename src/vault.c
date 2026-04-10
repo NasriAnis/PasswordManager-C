@@ -102,6 +102,7 @@ char** F_search(char* file_name,char* input, int search_type, int fetch_line){
     return results;
     }
   }
+
   if (search_type == 3){
     results = realloc(results, 3 * sizeof(char*));
 
