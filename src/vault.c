@@ -4,6 +4,12 @@
 
 #include "vault.h"
 
+typedef struct {
+  char *site;
+  char *username;
+  char *password;
+} Entry;
+
 FILE *F_open(char* file_name, char* type){
   FILE *fptr;
   fptr = fopen(file_name, type);
@@ -48,6 +54,7 @@ int new_line(char *file_name, int num){
 char** F_search(char* file_name,char* input, int search_type, int fetch_line){
   FILE *fptr;
   fptr = F_open(file_name, "r");
+  char** results = malloc(sizeof(char*));
 
   /* search types :
    * 1- user credentials
@@ -59,44 +66,70 @@ char** F_search(char* file_name,char* input, int search_type, int fetch_line){
     char word1[256]; char word2[256];
     fscanf(fptr, "%255s %255s", word1, word2);
 
-    char** results = malloc(2 * sizeof(char*));
+    results = realloc(results, 2 * sizeof(char*));
     results[0] = strdup(word1);
     results[1] = strdup(word2);
 
     return results;
   }
   if (search_type == 2){
-    char word1[256]; char word2[256]; char word3[256]; char line[1024];
+    // int j = 0;
+    int i = 1;
+
+    char word1[256]; 
+    char word2[256]; 
+    char word3[256]; 
+    char line[1024];
+    Entry *results = NULL;
+
     while (fgets(line, sizeof(line), fptr) != NULL) {
       if (sscanf(line, "%255s %255s %255s", word1, word2, word3) == 3) {
 
         if (strcmp(word1, input) == 0) {
-          char** results = malloc(3 * sizeof(char*));
+          results = realloc(results, i * sizeof(char*));
+
           if (!results) return NULL;
 
-          results[0] = strdup(word1);
-          results[1] = strdup(word2);
-          results[2] = strdup(word3);
-          return results;
+          results[i].site = strdup(word1);
+          results[i].username = strdup(word2);
+          results[i].password = strdup(word3);
+
+          i = i + 1;
         }
       }
+    results = realloc(results, (i + 1) * sizeof(Entry));
+    results[i] = (Entry){NULL, NULL, NULL};  // sentinel
+    return results;
     }
   }
   if (search_type == 3){
-    char word1[256]; char word2[256]; char word3[256]; char line[1024];
+    results = realloc(results, 3 * sizeof(char*));
+
+    char word1[256]; 
+    char word2[256]; 
+    char word3[256]; 
+    char line[1024];
+
+    int j = 0;
+    int i = 1;
+
     while (fgets(line, sizeof(line), fptr) != NULL) {
       if (sscanf(line, "%255s %255s %255s", word1, word2, word3) == 3) {
 
         if (strcmp(word2, input) == 0) {
-          char** results = malloc(3 * sizeof(char*));
+          results = realloc(results, 3 * i * sizeof(char*));
+
           if (!results) return NULL;
 
           results[0] = strdup(word1);
           results[1] = strdup(word2);
           results[2] = strdup(word3);
-          return results;
+
+          j = j + 3;
+          i = i + 1;
         }
       }
+    return results;
     }
   }
   return NULL;

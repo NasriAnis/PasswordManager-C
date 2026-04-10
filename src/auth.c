@@ -18,7 +18,7 @@ int authenticate(char *password_buffer, char* username_buffer) {
   saved_username = b64_raw_value[0];
   encoded_saved_pass = b64_raw_value[1];
 
-  decoded_saved_pass = decode_base64(encoded_saved_pass); // problem can come only from there
+  decoded_saved_pass = decode_base64(encoded_saved_pass);
   de_saved_username = decode_base64(saved_username);
 
   if (strcmp(username_buffer, de_saved_username) != 0){
