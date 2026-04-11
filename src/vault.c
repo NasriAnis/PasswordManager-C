@@ -61,10 +61,97 @@ char** Cred_search(char* file_name){
 }
 
 
+<<<<<<< HEAD
+=======
+// Entry* search(char* file_name,char* input, int search_type){
+//   FILE *fptr;
+//   fptr = F_open(file_name, "r");
+//
+//   if (search_type == 2){
+//
+//     int i = 0;
+//     Entry *results = NULL;
+//
+//     char word1[256];
+//     char word2[256];
+//     char word3[256];
+//     char line[4024];
+//
+//     while (fgets(line, sizeof(line), fptr) != NULL) {
+//
+//       if (sscanf(line, "%255s %255s %255s", word1, word2, word3) == 3) {
+//
+//         if (strcmp(word1, input) == 0) {
+//           Entry *tmp = realloc(results, (1 + i) * sizeof(Entry));
+//
+//           if (!tmp){free(results); return NULL;}
+//           results = tmp;
+//
+//           results[i].site = strdup(word1);
+//           results[i].username = strdup(word2);
+//           results[i].password = strdup(word3);
+//
+//           // debugging purpose
+//           printf("%s, %s, %s", results[i].site, results[i].username, results[i].password);
+//
+//           i = i + 1;
+//         }
+//       }
+//     }
+//     Entry *tmp = realloc(results, (i + 1) * sizeof(Entry));
+//     if (!tmp) { free(results); return NULL; }
+//     results = tmp;
+//     results[i] = (Entry){NULL, NULL, NULL};  // sentinel
+//     return results;
+//   }
+//
+//   if (search_type == 3){
+//
+//     int i = 0;
+//     Entry *results = NULL;
+//
+//     char word1[256];
+//     char word2[256];
+//     char word3[256];
+//     char line[1024];
+//
+//     while (fgets(line, sizeof(line), fptr) != NULL) {
+//
+//       if (sscanf(line, "%255s %255s %255s", word1, word2, word3)== 3) {
+//
+//         if (strcmp(word2, input) == 0) {
+//           Entry *tmp = realloc(results, (i + 1) * sizeof(char*));
+//
+//           if (!tmp){free(results); return NULL;}
+//           results = tmp;
+//
+//           results[i].site = strdup(word1);
+//           results[i].username = strdup(word2);
+//           results[i].password = strdup(word3);
+//
+//           i = i + 1;
+//         }
+//       }
+//     }
+//     Entry *tmp = realloc(results, (i + 1) * sizeof(Entry));
+//     if (!tmp) { free(results); return NULL; }
+//     results = tmp;
+//     results[i] = (Entry){NULL, NULL, NULL};  // sentinel
+//     return results;
+//   }
+//
+//
+//   printf("Nothing !");
+//   return NULL;
+// }
+
+
+>>>>>>> Testing
 Entry* search(char* file_name,char* input, int search_type){
   FILE *fptr;
   fptr = F_open(file_name, "r");
 
+<<<<<<< HEAD
   if (search_type == 2){
 
     int i = 0;
@@ -147,6 +234,59 @@ Entry* search(char* file_name,char* input, int search_type){
 
   printf("Nothing !");
   return NULL;
+=======
+  int flag;
+  int i = 0;
+  Entry *results = NULL;
+
+  char word1[256];
+  char word2[256];
+  char word3[256];
+  char line[4024];
+
+  while (fgets(line, sizeof(line), fptr) != NULL) {
+
+    if (sscanf(line, "%255s %255s %255s", word1, word2, word3) != 3){
+      continue;
+    }
+
+    // disable the flag
+    flag = 0;
+
+    if (search_type == 1){
+      if (strcmp(word1, input) == 0) {
+        flag = 1;
+      }
+    }
+    else if (search_type == 2){
+      if (strcmp(word2, input) == 0) {
+        flag = 1;
+      }
+    }
+
+    if (flag == 1){
+      Entry *tmp = realloc(results, (i + 1) * sizeof(Entry));
+
+      if (!tmp){free(results); return NULL;}
+      results = tmp;
+
+      results[i].site = strdup(word1);
+      results[i].username = strdup(word2);
+      results[i].password = strdup(word3);
+
+      i = i + 1;
+    }
+  }
+
+  Entry *tmp = realloc(results, (i + 1) * sizeof(Entry));
+  if (!tmp) { free(results); return NULL; }
+  results = tmp;
+
+  // sentinel end delimitter
+  results[i] = (Entry){NULL, NULL, NULL};
+
+  return results;
+>>>>>>> Testing
 }
 
 // Legacy Function
