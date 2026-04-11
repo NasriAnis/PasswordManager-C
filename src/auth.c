@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "auth.h"
 #include "crypto.h"
 #include "vault.h"
@@ -14,7 +15,7 @@ int authenticate(char *password_buffer, char* username_buffer) {
   char** b64_raw_value;
   int flag = 0;
 
-  b64_raw_value = F_search("user.bin", NULL, 1, 0);
+  b64_raw_value = Cred_search("user.bin");
   saved_username = b64_raw_value[0];
   encoded_saved_pass = b64_raw_value[1];
 

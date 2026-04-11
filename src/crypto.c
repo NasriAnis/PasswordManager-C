@@ -5,7 +5,6 @@
 #include <stdint.h>
 
 #include "crypto.h"
-#include "misc.h"
 
 #define CIPHERTEXT_LEN (crypto_secretbox_MACBYTES + MESSAGE_LEN)
 #define MESSAGE_LEN 4
@@ -112,6 +111,7 @@ char* decode_base64(const char* b64){
     NULL,        // don't need pointer to end
     sodium_base64_VARIANT_ORIGINAL
   );
+  if (ret != 0){ printf("Decoding Error !"); }
   bin[bin_len] = '\0';
 
   return (char *)bin;
