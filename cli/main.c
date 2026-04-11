@@ -149,7 +149,7 @@ void show(char *tokens[]) {
     return;
   }
 
-  char **results = NULL;
+  Entry *result = NULL;
   char *key = strtok(tokens[1], "=");
   char *value = strtok(NULL, "=");
 
@@ -158,36 +158,42 @@ void show(char *tokens[]) {
   char *b_key1 = encode_base64(value);
 
   if (strcmp(key, "site") == 0) {
-    results = F_search("user.bin", b_key1, 2, 1);
+    result = search("user.bin", b_key1, 2);
   }
-  else if (strcmp(key, "account") == 0) {
-    results = F_search("user.bin", b_key1, 2, 1);
+  else if (strcmp(key, "user") == 0) {
+    result = search("user.bin", b_key1, 3);
   }
   else {
     printf("Syntax error expected : \
            show site=[site] or show user=[username]");
   }
 
-  if (results == NULL) {
+  if (result == NULL) {
     printf("Error: Not found\n");
     return;
   }
 
-  char *fetched_site = results[0];
-  char *fetched_username = results[1];
-  char *fetched_password = results[2];
+ // logic change loop throught 3 words at a time
+  for (int i = 0; 1; i++){
+    if (result[i].site == NULL \
+      && result[i].username == NULL \
+      && result[i].password == NULL){
+      break;
+    }
 
-  char *decoded_site = decode_base64(fetched_site);
-  char *decoded_username = decode_base64(fetched_username);
-  unsigned char *decoded_password =
-      decode_base64_bin(fetched_password, &decoded_len);
+    char *decoded_site = decode_base64(result[i].site);
+    char *decoded_username = decode_base64(result[i].username);
+    unsigned char *decoded_password =
+        decode_base64_bin(result[i].password, &decoded_len);
 
-  unsigned char *clear_passwd = crypto_decrypt(
-      (const unsigned char *)user.passwd, (unsigned char *)decoded_password);
+    unsigned char *clear_passwd = crypto_decrypt(
+        (const unsigned char *)user.passwd, (unsigned char *)decoded_password);
 
-  printf("%s %s %s\n", decoded_site, decoded_username, clear_passwd);
-  free(decoded_username);
-  free(decoded_password);
+    printf("%s %s %s\n", decoded_site, decoded_username, clear_passwd);
+  }
+
+  // free(decoded_username);
+  // free(decoded_password);
   free(b_key1);
-  free(results);
+  free(result);
 }
