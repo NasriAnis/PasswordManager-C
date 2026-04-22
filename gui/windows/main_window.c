@@ -2,6 +2,7 @@
 
 #include "../../src/include/vault.h"
 #include "../../src/include/crypto.h"
+#include "../include/cred.h"
 
 static void main_window(GtkApplication *app, gpointer data);
 static void view_vault(GtkButton *button, gpointer *window_ptr);
@@ -100,11 +101,11 @@ static void view_vault(GtkButton *button, gpointer *data)
     unsigned char *decoded_password =
         decode_base64_bin(result[j].password, &decoded_len);
 
-    // unsigned char *clear_passwd = crypto_decrypt(
-    //     (const unsigned char *)user.passwd, (unsigned char *)decoded_password);
+    unsigned char *clear_passwd = crypto_decrypt(
+        (const unsigned char *)global_credentials.password, (unsigned char *)decoded_password);
 
     GtkWidget *content_area = window_ptr->content_area;
-    gtk_box_append(GTK_BOX(content_area), create_credential_row(decoded_site,  decoded_username,  "********"));
+    gtk_box_append(GTK_BOX(content_area), create_credential_row(decoded_site,  decoded_username,  (char *)clear_passwd));
   }
 }
 
@@ -143,7 +144,7 @@ GtkWidget* create_credential_row(const char *site, const char *username, const c
     GtkWidget *pass_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
     // GtkWidget *pass_label = gtk_label_new("Password");
     GtkWidget *pass_entry = gtk_entry_new();
-    gtk_entry_set_visibility(GTK_ENTRY(pass_entry), FALSE); // hide chars
+    // gtk_entry_set_visibility(GTK_ENTRY(pass_entry), FALSE); // hide chars
     gtk_widget_set_hexpand(pass_entry, TRUE);
     if (password)
         gtk_editable_set_text(GTK_EDITABLE(pass_entry), password);

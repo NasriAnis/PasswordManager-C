@@ -23,9 +23,9 @@ int f_gets(char* input, size_t size){
   }
 }
 
-void str_cpy(char* input, char* buffer){
-  strncpy(input, buffer, sizeof(input) - 1);
-  input[sizeof(input) - 1] = '\0';
+void str_cpy(char* dest, char* src, size_t dest_size){
+  strncpy(dest, src,  dest_size - 1);
+  dest[sizeof(dest) - 1] = '\0';
 }
 
 int tokenize(char* input, char** tokens){

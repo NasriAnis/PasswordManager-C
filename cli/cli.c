@@ -36,8 +36,8 @@ int main(int argc, char *argv[]) {
     }
 
     // save credential to a struct
-    str_cpy(user.username, username_buffer);
-    str_cpy(user.passwd, password_buffer); // the password will be used as an encryption key
+    str_cpy(user.username, username_buffer, sizeof(user.username));
+    str_cpy(user.passwd, password_buffer, sizeof(user.username)); // the password will be used as an encryption key
 
     while (1) {
       printf("> ");
