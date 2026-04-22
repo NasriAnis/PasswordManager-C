@@ -8,7 +8,6 @@ FILE *F_open(char* file_name, char* type){
   FILE *fptr;
   fptr = fopen(file_name, type);
   if (!fptr) {
-      perror("fopen");
       return fptr;
   }
   return fptr;
