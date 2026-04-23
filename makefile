@@ -11,12 +11,12 @@ GTK4_CFLAGS := $(shell pkg-config --cflags gtk4)
 GTK4_LIBS   := $(shell pkg-config --libs gtk4)
 
 # CLI-only sources (no gui/)
-CLI_DIRS := src cli
+CLI_DIRS := src cli cli/features
 CLI_SRCS := $(foreach dir,$(CLI_DIRS),$(wildcard $(dir)/*.c))
 CLI_OBJS := $(CLI_SRCS:.c=.o)
 
 # GUI sources (no cli/)
-GUI_DIRS := src gui gui/windows
+GUI_DIRS := src gui gui/windows gui/features
 GUI_SRCS := $(foreach dir,$(GUI_DIRS),$(wildcard $(dir)/*.c))
 GUI_OBJS := $(GUI_SRCS:.c=.o)
 

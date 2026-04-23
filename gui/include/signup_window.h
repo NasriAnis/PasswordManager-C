@@ -3,7 +3,6 @@
 
 #include <gtk/gtk.h>
 
-static void signup_panel(GtkApplication *app, gpointer data);
 int show_signup_panel(int argc, char** argv);
 
 #endif

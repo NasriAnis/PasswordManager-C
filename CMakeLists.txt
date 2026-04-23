@@ -30,8 +30,8 @@ include_directories(include)
 
 # 4. Source groups
 file(GLOB COMMON_SRCS "src/*.c")
-file(GLOB CLI_SRCS    "cli/*.c")
-file(GLOB GUI_SRCS    "gui/*.c" "gui/windows/*.c")
+file(GLOB CLI_SRCS    "cli/*.c" "cli/features/*.c")
+file(GLOB GUI_SRCS    "gui/*.c" "gui/windows/*.c" "gui/features/*.c")
 
 # 5. Target: CLI (Default)
 add_executable(lokr ${COMMON_SRCS} ${CLI_SRCS})
