@@ -77,7 +77,7 @@ static void login_panel(GtkApplication *app, gpointer data) {
   LoginData *loginptr = (LoginData *)data;
 
   /* create a new window and set arguments
-   * tutle, size etc */
+   * title, size etc */
   window = gtk_application_window_new(app);
   gtk_window_set_title(GTK_WINDOW(window), "Lokr login");
   gtk_window_set_default_size(GTK_WINDOW(window), 300, 300);

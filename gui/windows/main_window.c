@@ -2,6 +2,7 @@
 
 #include "../include/view_vault.h"
 #include "../include/main_window.h"
+#include "../include/credential_handling.h"
 
 #include "glib-object.h"
 
@@ -24,7 +25,8 @@ int show_main_window(int argc, char** argv)
 static void main_window(GtkApplication *app, gpointer data)
 {
   GtkWidget *paned, *sidebar, *btn_show_all,
-  *scrolled_window, *content_area, *main_window;
+  *scrolled_window, *content_area, *main_window, 
+  *btn_add_pass;
 
   Window *window_ptr = g_malloc(sizeof(Window));
 
@@ -45,6 +47,10 @@ static void main_window(GtkApplication *app, gpointer data)
   btn_show_all = gtk_button_new_with_label("Show All Data");
   g_signal_connect(btn_show_all, "clicked", G_CALLBACK(view_vault), window_ptr);
   gtk_box_append(GTK_BOX(sidebar), btn_show_all);
+
+  btn_add_pass = gtk_button_new_with_label("add passwords");
+  g_signal_connect(btn_add_pass, "clicked", G_CALLBACK(add_password), window_ptr);
+  gtk_box_append(GTK_BOX(sidebar), btn_add_pass);
 
   // initialize the right scrooled bar for content
   scrolled_window = gtk_scrolled_window_new();
