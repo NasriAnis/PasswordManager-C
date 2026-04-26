@@ -18,6 +18,8 @@ When first running the program it scans for a `user.bin` file where user credent
 ```
 add [site] [username] [password]
 show site=[site] or user=[username]
+delete [site] [username]
+dump-all
 ```
 
 Other options will be added in future versions...
