@@ -32,7 +32,15 @@ Be respectful. Contributions are reviewed by humans. Keep discussions technical,
    - `gcc` or `clang`
    - `libsodium` (dev headers)
    - `make`
-3. Build the project:
+3. Create a dedicated branch for your change — never work directly on main:
+```sh
+git checkout -b fix/vault-open-null-deref
+# or
+git checkout -b feat/entry-search-by-label
+
+```
+Branch names should follow the same prefix convention as commits: fix/, feat/, docs/, refactor/, test/.
+4. Build the project:
    ```sh
    make
    ```
