@@ -10,6 +10,14 @@ For the CLI tool to work you need to have both `argon2` and `sodium` libraries i
 ## Building the project
 You can clone this repository and build it using the command `make` inside the root project folder for the CLI and `make gui` for the GUI app.
 
+Or using `Cmake` which fetch dependencies automatically and locally :
+
+```
+mkdir build && cd build
+cmake ..
+cmake --build .
+```
+
 ## CLI Usage
 When first running the program it scans for a `user.bin` file where user credentials are stored then asks you for your password (that will be saved in this `user.bin` file and used as an encryption key) and username, then you can add and see stored passwords using the commands :
 
@@ -18,6 +26,7 @@ add [site] [username] [password]
 show site=[site] or user=[username]
 delete [site] [username]
 dump-all
+help
 ```
 
 Other options will be added in future versions...
