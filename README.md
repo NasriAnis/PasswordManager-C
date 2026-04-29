@@ -1,3 +1,57 @@
+## Code structure
+
+```
+Lokr
+├── .clangd
+├── .gitignore
+├── cli
+│   ├── cli.c                       # Entry point for the CLI tool 
+│   │                                 (helper cli functions under cli/features are called from there)
+│   │ 
+│   ├── features                    # wrappers used in (cli.c) using (src/) fucntions
+│   │   ├── authentication.c 
+│   │   ├── cred_cli_init.c         # intialize credentials heap space
+│   │   ├── help.c
+│   │   └── password_handling.c
+│   │ 
+│   └── include
+│       ├── authentication.h
+│       ├── cred_cli.h
+│       ├── help.h
+│       └── password_handling.h
+├── gui
+│   ├── entry.c                     # Entry point for the GUI tool
+│   │
+│   ├── features                    # wrappers that the GUI tool needs
+│   │   ├── cred.c
+│   │   ├── credential_handling.c
+│   │   └── view_vault.c
+│   │
+│   ├── include
+│   │   ├── cred.h
+│   │   ├── credential_handling.h
+│   │   ├── login_window.h
+│   │   ├── main_window.h
+│   │   ├── signup_window.h
+│   │   └── view_vault.h
+│   │
+│   └── windows                     # GUI windows initialisation
+│       ├── login_window.c
+│       ├── main_window.c
+│       └── signup_window.c
+│
+└── src                             # Source function folder
+    ├── auth.c                      # user authentication related functions
+    ├── crypto.c                    # Cryptography related functions 
+    ├── misc.c                      # Function wrappers
+    ├── vault.c                     # Vault handling functions
+    └── include
+        ├── auth.h
+        ├── crypto.h
+        ├── misc.h
+        └── vault.h
+```
+
 ## Presentation
 Secure Password Manager project I'am currently working on, implementing hash and encryption algorithms to store passwords and keys securely.
 
