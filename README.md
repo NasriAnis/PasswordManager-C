@@ -77,6 +77,7 @@ When first running the program it scans for a `user.bin` file where user credent
 add [site] [username] [password]
 show site=[site] or user=[username]
 delete [site] [username]
+gen [site] [username]
 dump-all
 help
 ```
