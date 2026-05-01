@@ -1,5 +1,5 @@
 #include <string.h>
-#include "../include/cred.h"
+#include "include/cred_init.h"
 
 cred global_credentials = {0};  // NOT a pointer
 

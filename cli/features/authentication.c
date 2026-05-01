@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../../src/include/auth.h"
-#include "../../src/include/misc.h"
+#include "../../src/misc/include/wrapper.h"
+#include "../../src/misc/include/helper.h"
+#include "../../src/auth/include/signup.h"
+#include "../../src/auth/include/login.h"
 
 void user_creation(char* username_buffer, char* password_buffer, size_t user_size, size_t pass_size) {
   // Takes user credential

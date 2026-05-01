@@ -3,9 +3,9 @@
 #include "include/login_window.h"
 #include "include/signup_window.h"
 #include "include/main_window.h"
-#include "include/cred.h"
 
-#include "../src/include/vault.h"
+#include "../src/vault/include/vault_helper.h"
+#include "../src/init/include/cred_init.h"
 
 int main(){
   int flag;

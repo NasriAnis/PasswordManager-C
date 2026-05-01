@@ -56,4 +56,3 @@ int generate_password(size_t length, PasswordComplexity complexity, char *buffer
 
     return 0;
 }
-

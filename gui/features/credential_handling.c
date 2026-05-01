@@ -1,10 +1,12 @@
 #include <gtk/gtk.h>
 
-#include "../include/cred.h"
 #include "../include/main_window.h"
 
-#include "../../src/include/crypto.h"
-#include "../../src/include/vault.h"
+#include "../../src/vault/include/vault_helper.h"
+#include "../../src/init/include/cred_init.h"
+
+#include "../../src/crypto/include/encrypt.h"
+#include "../../src/crypto/include/base64.h"
 
 typedef struct{
   GtkWidget *entry_username;

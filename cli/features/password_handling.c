@@ -4,12 +4,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../../src/include/misc.h"
-#include "../../src/include/gen.h"
-#include "../../src/include/crypto.h"
-#include "../../src/include/vault.h"
+#include "../../src/misc/include/wrapper.h"
+#include "../../src/vault/include/vault_helper.h"
+#include "../../src/init/include/cred_init.h"
+#include "../../src/vault/include/vault.h"
 
-#include "../include/cred_cli.h"
+#include "../../src/crypto/include/gen.h"
+#include "../../src/crypto/include/encrypt.h"
+#include "../../src/crypto/include/base64.h"
 
 void add(char *tokens[]) {
   char *site = tokens[1];
@@ -29,7 +31,7 @@ void add(char *tokens[]) {
   if (strcmp(user_input, "n") != 0) {
     size_t blob_len = 0;
     unsigned char *encrypted_pass =
-        crypto_encrypt((unsigned char *)user.passwd, (unsigned char *)pass,
+        crypto_encrypt((unsigned char *)global_credentials.password, (unsigned char *)pass,
                        strlen(pass), &blob_len);
 
     char *b64_site = encode_base64(site);
@@ -99,7 +101,7 @@ void gen(char* tokens[]) {
   if (strcmp(user_input, "n") != 0) {
     size_t blob_len = 0;
     unsigned char *encrypted_pass =
-        crypto_encrypt((unsigned char *)user.passwd, (unsigned char *)buffer,
+        crypto_encrypt((unsigned char *)global_credentials.password, (unsigned char *)buffer,
                        strlen(buffer), &blob_len);
 
     char *b64_site = encode_base64(site);
@@ -176,7 +178,7 @@ void show(char *tokens[]) {
     char *decoded_username = decode_base64(result[j].username);
     unsigned char *decoded_password = decode_base64_bin(result[j].password, &decoded_len);
 
-    unsigned char *clear_passwd = crypto_decrypt( (const unsigned char *)user.passwd, (unsigned char *)decoded_password);
+    unsigned char *clear_passwd = crypto_decrypt( (const unsigned char *)global_credentials.password, (unsigned char *)decoded_password);
 
     printf("%s %s %s\n", decoded_site, decoded_username, clear_passwd);
   }
@@ -223,7 +225,7 @@ void dump(char *filename){
     char *decoded_username = decode_base64(result[j].username);
     unsigned char *decoded_password = decode_base64_bin(result[j].password, &decoded_len);
 
-    unsigned char *clear_passwd = crypto_decrypt( (const unsigned char *)user.passwd, (unsigned char *)decoded_password);
+    unsigned char *clear_passwd = crypto_decrypt( (const unsigned char *)global_credentials.password, (unsigned char *)decoded_password);
 
     printf("%s %s %s\n", decoded_site, decoded_username, clear_passwd);
   }

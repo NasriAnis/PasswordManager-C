@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../src/include/misc.h"
-#include "../src/include/vault.h"
+#include "../src/misc/include/helper.h"
+#include "../src/misc/include/wrapper.h"
 
-#include "include/cred_cli.h"
+#include "../src/vault/include/vault_helper.h"
+
+#include "../src/init/include/cred_init.h"
+
 #include "include/help.h"
 #include "include/authentication.h"
 #include "include/password_handling.h"
@@ -26,8 +29,8 @@ int main() {
   }
 
   // save credential to a struct, the password will be used as an encryption key
-  str_cpy(user.username, username_buffer, sizeof(user.username));
-  str_cpy(user.passwd, password_buffer, sizeof(user.username));
+  str_cpy(global_credentials.username, username_buffer, sizeof(global_credentials.username));
+  str_cpy(global_credentials.password, password_buffer, sizeof(global_credentials.username));
 
   while (1) {
     printf("> ");

@@ -26,10 +26,24 @@ pkg_check_modules(GTK4 REQUIRED IMPORTED_TARGET gtk4)
 
 # 3. Project Configuration
 set(CMAKE_C_STANDARD 11)
-include_directories(include)
+# include_directories(include)
+include_directories(
+    include
+    src/misc/include
+    src/vault/include
+    cli/include        # if it exists
+)
 
 # 4. Source groups
-file(GLOB COMMON_SRCS "src/*.c")
+# file(GLOB COMMON_SRCS "src/*.c" "src/crypto" "src/auth" "src/init" "src/misc" "src/vault")
+file(GLOB COMMON_SRCS 
+    "src/*.c"
+    "src/crypto/*.c"
+    "src/auth/*.c"
+    "src/init/*.c"
+    "src/misc/*.c"
+    "src/vault/*.c"
+)
 file(GLOB CLI_SRCS    "cli/*.c" "cli/features/*.c")
 file(GLOB GUI_SRCS    "gui/*.c" "gui/windows/*.c" "gui/features/*.c")
 

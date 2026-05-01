@@ -1,9 +1,12 @@
 #include <gtk/gtk.h>
 
-#include "../../src/include/auth.h"
-#include "../../src/include/misc.h"
-#include "../include/cred.h"
 #include "../include/signup_window.h"
+
+#include "../../src/auth/include/signup.h"
+#include "../../src/misc/include/debug.h"
+#include "../../src/auth/include/login.h"
+#include "../../src/init/include/cred_init.h"
+#include "../../src/misc/include/wrapper.h"
 
 static void test_credentials(GtkButton *button, gpointer user_data);
 static void signup_panel(GtkApplication *app, gpointer data);

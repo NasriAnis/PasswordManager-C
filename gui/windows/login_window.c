@@ -1,9 +1,10 @@
 #include <gtk/gtk.h>
 
 #include "../include/login_window.h"
-#include "../../src/include/auth.h"
-#include "../include/cred.h"
-#include "../../src/include/misc.h"
+
+#include "../../src/auth/include/login.h"
+#include "../../src/init/include/cred_init.h"
+#include "../../src/misc/include/wrapper.h"
 
 static void login_panel(GtkApplication *app, gpointer data);
 static void test_credentials(GtkButton *button, gpointer user_data);

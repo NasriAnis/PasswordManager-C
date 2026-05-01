@@ -1,12 +1,14 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 
-#include "../../src/include/vault.h"
-#include "../../src/include/crypto.h"
-
-#include "../include/cred.h"
 #include "../include/main_window.h"
 #include "../include/view_vault.h"
+
+#include "../../src/init/include/cred_init.h"
+#include "../../src/vault/include/vault.h"
+
+#include "../../src/crypto/include/encrypt.h"
+#include "../../src/crypto/include/base64.h"
 
 GtkWidget* create_credential_row(const char *site, const char *username, const char *password);
 
